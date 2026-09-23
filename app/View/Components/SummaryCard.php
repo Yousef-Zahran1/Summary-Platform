@@ -8,9 +8,10 @@ use Illuminate\View\Component;
 
 class SummaryCard extends Component
 {
-    public function __construct(
-        public Summary $summary
-    ) {
+    public $variant;
+
+    public function __construct(public Summary $summary, $variant = "default") {
+        $this->variant = $variant; // التصحيح هنا
     }
 
     public function render(): View

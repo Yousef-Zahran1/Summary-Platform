@@ -12,7 +12,7 @@
             <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
             <span>ملخصاتي المرفوعة ({{ $userSummariesCount }})</span>
         </button>
-
+        @if(auth()->id() == $user->id)
         <button
                 wire:click="changeTab('saved-summaries')"
                 class="px-4 py-2 rounded-full text-xs font-bold transition flex items-center gap-2
@@ -23,6 +23,7 @@
             <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
             <span>الملخصات المحفوظة ({{ $savedCount }})</span>
         </button>
+        @endif
 
         <button
                 wire:click="changeTab('likes')"
@@ -49,22 +50,7 @@
         </div>
         
 
-
-        <form method="GET" action="{{route('profile.show')}}" class="relative w-full sm:w-auto">
-            <input type="hidden" name="tab" value="{{ $tab }}">
-            <select name="sort" onchange="this.form.submit()" class="appearance-none bg-white border border-slate-200 text-slate-800 text-xs rounded-xl px-4 py-2.5 
-                            pl-10 focus:outline-none focus:border-sky-500 transition font-medium w-full sm:w-44 cursor-pointer">
-                <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>الأحدث</option>
-                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>الأقدم</option>
-                <option value="highest_likes" {{ request('sort') == 'highest_likes' ? 'selected' : '' }}>الأعلى إعجاباً</option>
-                <option value="highest_downloads" {{ request('sort') == 'highest_downloads' ? 'selected' : '' }}>الأعلى تنزيلاً</option>
-            </select>
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500 gap-1">
-                <!-- أيقونة Chevron Down -->
-                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            
-            </div>
-        </form>
+        <x-summaries-filter :route="route('profile.show', $user->id )" />
 
 
     </div>
@@ -100,7 +86,7 @@
                 @forelse($summaries as $summary)
                     <x-summary-card :summary="$summary"/>
                 @empty
-                    <div class="col-span-3 text-center text-slate-400 text-xs py-8">
+                    <div class="col-span-3 bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400 text-xs">
                         لا توجد ملخصات محفوظة.
                     </div>
                 @endforelse
@@ -119,7 +105,7 @@
                 @forelse($summaries as $summary)
                     <x-summary-card :summary="$summary"/>
                 @empty
-                    <div class="col-span-3 text-center text-slate-400 text-xs py-8">
+                    <div class="col-span-3 bg-white rounded-2xl border border-slate-200 p-12 text-center text-slate-400 text-xs">
                         لم تقم الإعجاب بأي ملخص بعد.
                     </div>
                 @endforelse

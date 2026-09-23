@@ -11,6 +11,7 @@ class ProfileTabs extends Component
 {
     #[Url(except: 'my-summaries')]
     public $tab = 'my-summaries';
+    public User $user ;
     
     
     public function changeTab($newTab)
@@ -35,8 +36,7 @@ class ProfileTabs extends Component
         // if ($this->tab === 'downloads') {
         //     $summaries = $user->downloads()->get() ; 
         // }
-        $user = User::findOrFail(1); 
-        
+        $user = $this->user;
         $sort = request('sort', 'latest'); 
         
         $query = match ($this->tab) {

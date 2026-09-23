@@ -1,39 +1,25 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة يوسف زهران</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Cairo', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts: Cairo -->
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
+        <!-- Alpine.js CDN -->
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <!-- Google Fonts: Cairo -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; color: #0f172a; }
     </style>
-    <!-- Alpine.js (تم تصحيح الرابط هنا ليعمل بسلاسة) -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-</head>
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+
 <body class="min-h-screen flex antialiased selection:bg-sky-600 selection:text-white">
 
     <!-- القائمة الجانبية بالوضع الفاتح -->
@@ -67,7 +53,7 @@
                     <span>الصفحة الرئيسية</span>
                 </a>
 
-                <a href="{{route('profile.show')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('profile.show') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">
+                <a href="{{auth()->check() ? route('profile.show', auth()->id()) : route('login') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('profile.show') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">
                     <!-- أيقونة الملف الشخصي SVG -->
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="8" r="5"/>
@@ -86,7 +72,7 @@
                     <span>سجل التنزيلات</span>
                 </a>
 
-                <a href="{{route('settings.index')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('settings.index') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">
+                <a href="{{route('settings')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('settings') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">
                     <!-- أيقونة الإعدادات SVG -->
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M4 21v-7"/>
@@ -104,26 +90,68 @@
             </div>
         </div>
 
-        <!-- معلومات المستخدم المصغرة في الأسفل -->
-        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-xl bg-sky-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">
-                    ي
+        @auth
+                <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <a href="{{route('profile.show', auth()->id() )}}" class="relative w-8 h-8 rounded-full overflow-hidden bg-gray-200 shrink-0 shadow-sm  ring-gray-200">
+                            @if(auth()->user()->avatar)
+                                <img 
+                                    src="{{ asset('storage/' . auth()->user()->avatar ) }}" 
+                                    alt="{{ auth()->user()->name  }}" 
+                                    class="w-full h-full object-cover"
+                                >
+                            @else
+                                <svg 
+                                    class="w-full h-full text-white" 
+                                    viewBox="0 0 24 24" 
+                                    fill="currentColor"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path d="M12 12.75a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2.25c-4.14 0-7.5 2.35-7.5 5.25v.75a.75.75 0 0 0 .75.75h13.5a.75.75 0 0 0 .75-.75V20.25c0-2.9-3.36-5.25-7.5-5.25Z"/>
+                                </svg>
+                            @endif
+                        </a>
+                        <a href="{{route('profile.show', auth()->id())}}" class="overflow-hidden">
+                            <span class="text-xs font-bold text-slate-900 block truncate">{{ Auth::user()->name }}</span>
+                            <span class="text-[10px] text-slate-500 block truncate">{{ Auth::user()->basic_department->name ?? 'قسم غير معروف' }}</span>
+                        </a>
+                    </div>
+                    <!-- فورم تسجيل الخروج (يُفضل استخدام فورم لـ Laravel Post) أو رابط مباشر حسب رغبتك -->
+                    <form action="{{ route('logout') }}" method="POST" class="inline">
+                        @csrf
+                        <button type="submit" class="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition cursor-pointer" title="خروج">
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" x2="9" y1="12" y2="12"/>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
-                <div class="overflow-hidden">
-                    <span class="text-xs font-bold text-slate-900 block truncate">يوسف زهران</span>
-                    <span class="text-[10px] text-slate-500 block truncate">علوم الحاسب</span>
-                </div>
+        @endauth
+        @guest
+        <div class="pt-4 border-t border-slate-100 space-y-3">
+            <!-- كلام تعريفي عن المنصة شبيه بجيميني -->
+            <div class="px-1">
+                <p class="text-xs font-semibold text-slate-800">سجل الدخول للمتابعة</p>
+                <p class="text-[11px] text-slate-500 mt-0.5 leading-relaxed">احفظ ملخصاتك، تابع موادك الدراسية، وشارك المحتوى بكل سهولة.</p>
             </div>
-            <a href="#" class="p-2 text-rose-500 hover:bg-rose-50 rounded-xl transition" title="خروج">
-                <!-- أيقونة الخروج SVG -->
-                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <polyline points="16 17 21 12 16 7"/>
-                    <line x1="21" x2="9" y1="12" y2="12"/>
-                </svg>
-            </a>
+            
+            <!-- أزرار الدخول وإنشاء الحساب -->
+            <div class="flex items-center gap-2">
+                <a href="{{ route('login') }}" class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-xs transition">
+                    <svg class="w-3.5 h-3.5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" x2="3" y1="12" y2="12"/>
+                    </svg>
+                    <span>دخول</span>
+                </a>
+                
+            </div>
         </div>
+@endguest
+        
     </aside>
 
     <!-- المحتوى الرئيسي -->
@@ -146,6 +174,31 @@
             
             <!-- الجهة اليسار: الإشعارات وبطاقة المستخدم -->
             <div class="flex items-center gap-3 shrink-0">
+                @guest
+            <div class=" grid grid-cols-2 gap-2">
+                <!-- زر تسجيل الدخول (ثانوي أو بحدود) -->
+                <a href="{{ route('login') }}" class="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-semibold text-xs transition">
+                    <svg class="w-3.5 h-3.5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" x2="3" y1="12" y2="12"/>
+                    </svg>
+                    <span>دخول</span>
+                </a>
+                
+                <!-- زر إنشاء حساب (بارز ولونه مميز لزيادة الـ Conversion) -->
+                <a href="{{ route('register') }}" class="flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-xs shadow-sm shadow-sky-600/20 transition">
+                    <svg class="w-3.5 h-3.5 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="8.5" cy="7" r="4"/>
+                        <line x1="20" x2="20" y1="8" y2="14"/>
+                        <line x1="23" x2="17" y1="11" y2="11"/>
+                    </svg>
+                    <span>حساب جديد</span>
+                </a>
+            </div>
+        @endguest
+        @auth
                 <a href="{{route('summaries.create')}}" class="cursor-pointer bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center gap-2 shadow-sm shadow-sky-600/20 transition shrink-0">
                     <!-- أيقونة رفع ملف SVG -->
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -168,12 +221,25 @@
                 </button>
 
                 <!-- بطاقة المستخدم المطورة -->
-                <div class="flex items-center gap-3 py-1.5 rounded-2xl cursor-pointer transition border border-transparent">
-                    <div class="relative w-9 h-9 rounded-full shrink-0 shadow-xs border border-sky-200 overflow-hidden">
-                        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=120&q=80" class="w-full h-full object-cover" alt="صورة المستخدم">
-                        <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-sky-500 border-2 border-white rounded-full"></span>
-                    </div>
-                </div>
+                        <a href="{{route('profile.show', auth()->id() )}}" class="relative w-8 h-8 rounded-full overflow-hidden bg-gray-200 shrink-0 shadow-sm border-2 border-white ring-1 ring-gray-200">
+                    @if(auth()->user()->avatar)
+                        <img 
+                            src="{{ asset('storage/' . auth()->user()->avatar ) }}" 
+                            alt="{{ auth()->user()->name  }}" 
+                            class="w-full h-full object-cover"
+                        >
+                    @else
+                        <svg 
+                            class="w-full h-full text-white" 
+                            viewBox="0 0 24 24" 
+                            fill="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path d="M12 12.75a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2.25c-4.14 0-7.5 2.35-7.5 5.25v.75a.75.75 0 0 0 .75.75h13.5a.75.75 0 0 0 .75-.75V20.25c0-2.9-3.36-5.25-7.5-5.25Z"/>
+                        </svg>
+                    @endif
+                </a>
+            @endauth
             </div>
 
         </header>
@@ -186,5 +252,7 @@
 <script>
     lucide.createIcons();
 </script>
+
+
 </body>
 </html>

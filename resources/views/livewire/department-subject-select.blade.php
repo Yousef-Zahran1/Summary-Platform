@@ -16,12 +16,8 @@
         <label for="subject_id" class="text-xs font-bold text-slate-600">المادة الدراسية</label>
         <select wire:model="subjectId" id="subject_id" name="subject_id" required @disabled(!$departmentId)
                 class="w-full rounded-xl border border-slate-200 py-2.5 px-4 text-sm text-slate-800 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-400">
-                <option value="">
-                    @if(!$departmentId)
-                        اختر القسم أولاً
-                    @else
-                        اختر المادة
-                    @endif
+                <option value="" >
+                    {{ $departmentId ? 'اختر المادة' : 'اختر القسم أولاً' }}
                 </option>
             @foreach($subjects as $subject)
                 <option value="{{ $subject->id }}">{{ $subject->name }}</option>

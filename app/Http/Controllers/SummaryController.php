@@ -37,24 +37,43 @@ class SummaryController extends Controller
     public function show(Summary $summary){
         return view('summaries.show' ,compact('summary'));
     }
+
     public function create(){
         $departments = Department::all();
         return view('summaries.create' ,compact('departments'));
     }
+
     public function store(Request $request){
-        $validated =$request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' =>'nullable|string',
             'department_id' =>'required|exists:departments,id',
             'subject_id' =>'required|exists:subjects,id',
         ]);
-        $validated['user_id'] = 1;
+        $validated['user_id'] = auth()->id();
         $validated['file_path'] = "file_path";
         Summary::create($validated);
-        // return to_route('summaries.create');
-        return back();
+        return to_route('summaries.index')->with('success', 'تم إضافة الملخص بنجاح.');
+        // return back();
     }
-    public function edit(){
-        return view('summaries.edit');
+    
+    public function edit(Summary $summary){
+        $departments = Department::all();
+        return view('summaries.edit' , compact('summary', 'departments'));
+    }
+    
+    public function update(Request $request , Summary $summary){
+        $validated = $request->validate([
+            'title' => "required|string|max:255",
+            'description' => "nullable|string",
+            'department_id' =>'required|exists:departments,id',
+            'subject_id' =>'required|exists:subjects,id',
+        ]);
+        $summary->update($validated);
+        return to_route('summaries.show', $summary->id )->with('success', 'تم تعديل الملخص بنجاح.');
+    }
+    public function destroy(Summary $summary){
+        $summary->delete();
+        return to_route('summaries.index')->with('success', 'تم حذف الملخص بنجاح.');
     }
 }

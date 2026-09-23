@@ -9,14 +9,18 @@ class LikeButton extends Component
 {
     public Summary $summary;
     public bool $liked;
+    public $variant = "icon";
 
     public function mount()
     {
-        $this->liked = $this->summary->likers()->where('user_id', 1)->exists();
+        $this->liked = auth()->check() 
+            ? $this->summary->likers()->where('user_id', auth()->id())->exists() 
+            : false;
+        
     }
     public function toggleLike()
     {
-        $this->summary->likers()->toggle(1);
+        $this->summary->likers()->toggle(auth()->id());
         $this->liked = !$this->liked;
         $this->summary->loadCount('likers');
         // $this->summary->refresh();

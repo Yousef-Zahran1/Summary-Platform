@@ -55,7 +55,7 @@
                             <label for="remember-me" class="ml-2 block text-sm text-gray-900">تذكرني</label>
                         </div>
                         <div class="text-sm">
-                            <a href="{{route('register')}}" class="font-medium text-indigo-600 hover:text-indigo-500">نسيت كلمة المرور؟</a>
+                            <a href="{{route('password.request')}}" class="font-medium text-indigo-600 hover:text-indigo-500">نسيت كلمة المرور؟</a>
                         </div>
                     </div>
 

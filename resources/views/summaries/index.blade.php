@@ -4,11 +4,12 @@
         <!-- محتوى الصفحة الرئيسية -->
         <main class="flex-grow p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
             
+        <x-messages />
             <!-- قسم البانر الرئيسي والإحصائيات -->
 <div class="space-y-6">
     
     <!-- البانر العلوي المتطور -->
-    <div class="relative bg-gradient-to-r from-sky-700 via-sky-600 to-[#19b2ee] rounded-3xl p-6 lg:p-10 text-white shadow-xl overflow-hidden">
+    <div class="relative bg-gradient-to-r to-sky-700 via-sky-600 from-[#19b2ee] rounded-3xl p-6 lg:p-10 text-white shadow-xl overflow-hidden">
         <!-- تأثيرات جمالية في الخلفية -->
         <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
@@ -59,10 +60,10 @@
                 <p class="text-[11px] text-sky-100 leading-relaxed">
                     شارك زملاؤك ملخصاتك الدراسية المتميزة واحصل على شارة ناشر موثق وشهادة تقدير الكلية.
                 </p>
-                <button class="w-full bg-white hover:bg-sky-50 text-sky-700 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md">
+                <a href="{{ route('summaries.create') }}" class="w-full bg-white hover:bg-sky-50 text-sky-700 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md">
                     <i data-lucide="plus-circle" class="w-4 h-4"></i>
                     <span>رفع ملخص جديد الآن</span>
-                </button>
+                </a>
             </div>
 
         </div>

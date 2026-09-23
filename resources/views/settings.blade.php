@@ -3,7 +3,7 @@
 @section("content")
         <!-- محتوى صفحة الإعدادات مع تفعيل Alpine.js -->
         <main class="flex-grow p-6 lg:p-8 space-y-6 max-w-5xl mx-auto w-full" x-data="{ activeTab: 'profile' }">
-            
+            <x-messages />
             <!-- عنوان الصفحة -->
             <div class="flex items-center gap-3 pt-2">
                 <div class="text-sky-600">
@@ -39,83 +39,128 @@
                 </button>
             </div>
 
-            <!-- محتوى تبويب: الحساب الشخصي -->
-            <div x-show="activeTab === 'profile'" class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 lg:p-8 space-y-6">
+
+
+
+        <div x-show="activeTab === 'profile'" class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 lg:p-8 space-y-6">
+            
+            
+            <!-- الفورم الكبيرة لتحديث البيانات والاسم وغيرها -->
+            
                 <h2 class="text-sm font-bold text-gray-900 border-b border-gray-100 pb-4">المعلومات الأساسية</h2>
 
                 <div class="flex items-center gap-4">
-                    <div class="w-16 h-16 rounded-2xl bg-sky-600 text-white font-bold flex items-center justify-center text-xl shadow-md">
-                        ي
+                    <!-- صورة البروفايل -->
+                    <div class="relative w-20 h-20 rounded-full overflow-hidden bg-gray-200 shrink-0 shadow-sm border-2 border-white ring-1 ring-gray-200">
+                        @if($user->avatar)
+                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+                        @else
+                            <svg class="w-full h-full text-white" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 12.75a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2.25c-4.14 0-7.5 2.35-7.5 5.25v.75a.75.75 0 0 0 .75.75h13.5a.75.75 0 0 0 .75-.75V20.25c0-2.9-3.36-5.25-7.5-5.25Z"/>
+                            </svg>
+                        @endif
                     </div>
-                    <div class="space-y-1.5">
-                        <div class="flex items-center gap-2">
-                            <label class="cursor-pointer bg-gray-50 hover:bg-gray-100 active:scale-95 text-gray-700 text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-150 flex items-center gap-2">
-                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"></path>
-                </svg>
-                <span>تغيير الصورة</span>
-                <input type="file" class="hidden" accept="image/png, image/jpeg">
-            </label>
 
-            <!-- زر إزالة الصورة -->
-            <button type="button" class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-2 rounded-xl transition-all duration-150 flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.108 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
-                </svg>
-                <span>إزالة</span>
-            </button>
+                    <div class="space-y-1.5">
+                        <!-- أزرار رفع الصورة وإزالتها جنباً إلى جنب -->
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <!-- زرار رفع أو تغيير الصورة -->
+                            <form  method="POST" action="{{ route('settings.profile.avatar.store') }}" enctype="multipart/form-data">
+                                @csrf
+                                @method('POST')
+                                <label class="cursor-pointer bg-gray-50 hover:bg-gray-100 active:scale-95 text-gray-700 text-xs font-semibold px-4 py-2 rounded-xl transition-all duration-150 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"></path>
+                                    </svg>
+                                    <span>{{ $user->avatar ? "تغيير الصورة" : "اضافة صورة" }}</span>
+                                    <input name="avatar" type="file" class="hidden" accept="image/png, image/jpeg" onchange="this.form.submit();">
+                                </label>
+                                </form> 
+                                
+                            @if($user->avatar)
+                                <form  method="POST" action="{{ route('settings.profile.avatar.delete') }}" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button 
+                                        type="submit" 
+                                        onclick="return confirm('هل أنت متأكد من حذف الصورة؟');"
+                                        class="bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-2 rounded-xl transition-all duration-150 flex items-center gap-1.5"
+                                    >
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.108 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                                        </svg>
+                                        <span>إزالة</span>
+                                    </button>
+                                </form> 
+                            @endif
                         </div>
                         <p class="text-[11px] text-gray-400">JPG أو PNG بحد أقصى 2 ميجابايت.</p>
                     </div>
                 </div>
-
+            <form id="main-profile-form" method="POST" action="{{ route('settings.profile.update') }}" enctype="multipart/form-data" class="space-y-6">
+                @csrf
+                @method('patch')
+                <!-- باقي حقول الفورم (الاسم، البريد، القسم، المرحلة، النبذة) -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     <div class="space-y-1.5">
-                        <label class="font-semibold text-gray-700 block">الاسم الكامل</label>
-                        <input type="text" value="يوسف زهران" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
+                        <label class="font-semibold text-gray-700 block">الاسم بالكامل</label>
+                        <input type="text" value="{{ $user->name }}" name="name" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
                     </div>
 
                     <div class="space-y-1.5">
                         <label class="font-semibold text-gray-700 block">البريد الإلكتروني</label>
-                        <input type="email" value="yousef@example.com" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
+                        <input type="email" value="{{ $user->email }}" name="email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="font-semibold text-gray-700 block">الكلية / القسم</label>
-                        <select class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
-                            <option>علوم الحاسب</option>
-                            <option>فيزياء</option>
-                            <option>رياضيات</option>
-                            <option>كيمياء</option>
+                        <label class="font-semibold text-gray-700 block">القسم</label>
+                        <select name="basic_department_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
+                            @if(!$user->basic_department_id) 
+                                <option disabled selected>لم يحدد بعد </option>
+                            @else
+                                <option disabled selected>اختر القسم</option>
+                            @endif
+                            @foreach($basic_departments as $department)
+                                <option value="{{ $department->id }}" {{ $user->basic_department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                            @endforeach
                         </select>
                     </div>
 
                     <div class="space-y-1.5">
                         <label class="font-semibold text-gray-700 block">المرحلة الدراسية</label>
-                        <select class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
-                            <option>الفرقة الثانية</option>
-                            <option>الفرقة الأولى</option>
-                            <option>الفرقة الثالثة</option>
-                            <option>الفرقة الرابعة</option>
+                        <select name="level" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
+                            @if(!$user->level)
+                                <option disabled selected>لم يحدد بعد </option>
+                            @else
+                                <option disabled selected>اختر المرحلة الدراسية</option>
+                            @endif
+                            <option value="الأول" {{ $user->level == 'الأول' ? 'selected' : '' }}>الفرقة الأولى</option>
+                            <option value="الثاني" {{ $user->level == 'الثاني' ? 'selected' : '' }}>الفرقة الثانية</option>
+                            <option value="الثالث" {{ $user->level == 'الثالث' ? 'selected' : '' }}>الفرقة الثالثة</option>
+                            <option value="الرابع" {{ $user->level == 'الرابع' ? 'selected' : '' }}>الفرقة الرابعة</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="space-y-1.5 text-xs">
                     <label class="font-semibold text-gray-700 block">نبذة مختصرة</label>
-                    <textarea rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-800 focus:outline-none focus:border-sky-500" placeholder="اكتب نبذة قصيرة عن اهتماماتك الدراسية...">مهتم ببرمجة وتطوير وتلخيص المراجع الأكاديمية.</textarea>
+                    <textarea name="bio" rows="3" class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3.5 text-gray-800 focus:outline-none focus:border-sky-500" placeholder="اكتب نبذة قصيرة عن اهتماماتك الدراسية...">{{ $user->bio }}</textarea>
                 </div>
 
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-                    <button type="button" class="bg-gray-50 hover:bg-gray-100 border border-gray-200 text-gray-700 text-xs font-semibold px-5 py-2.5 rounded-xl transition">
+                    <button type="button" class="bg-gray-50 cursor-pointer hover:bg-gray-100 border border-gray-200 text-gray-700 text-xs font-semibold px-5 py-2.5 rounded-xl transition">
                         إلغاء
                     </button>
-                    <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-6 py-2.5 rounded-xl transition shadow-sm">
+                    <button type="submit" class="bg-sky-600 cursor-pointer hover:bg-sky-500 text-white text-xs font-semibold px-6 py-2.5 rounded-xl transition shadow-sm">
                         حفظ التغييرات
                     </button>
                 </div>
-            </div>
+            </form>
+        </div>
+
+
+
 
             <!-- محتوى تبويب: الأمان وكلمة المرور -->
             <div x-show="activeTab === 'security'" class="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 lg:p-8 space-y-6" style="display: none;">
@@ -137,7 +182,7 @@
                 </div>
 
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-                    <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-6 py-2.5 rounded-xl transition shadow-sm">
+                    <button  class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-6 py-2.5 rounded-xl transition shadow-sm">
                         تحديث كلمة المرور
                     </button>
                 </div>
@@ -166,7 +211,7 @@
                 </div>
 
                 <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-                    <button type="submit" class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-6 py-2.5 rounded-xl transition shadow-sm">
+                    <button  class="bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold px-6 py-2.5 rounded-xl transition shadow-sm">
                         حفظ تفضيلات الإشعارات
                     </button>
                 </div>

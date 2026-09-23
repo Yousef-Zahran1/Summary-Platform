@@ -9,7 +9,7 @@ class DownloadsSummaryController extends Controller
 {
     public function index(Request $request){
         $sort = $request->input('sort' , 'latest');
-        $query = User::findOrfail(1)->downloads();
+        $query = auth()->user()->downloads();
         if($sort === "latest"){
             $summaries = $query->latest()->paginate(20);
         }
