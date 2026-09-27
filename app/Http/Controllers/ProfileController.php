@@ -15,28 +15,38 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    public function show(User $user, Request $request){
-        $savedSummaries = $user->savedSummaries()->get();
-        $likedSummaries = $user->likedSummaries()->get();
-        $totalLikes = Summary::where('user_id', auth()->id())->withCount('likers')->get()->sum('likers_count');
-        $downloadSummaries = $user->downloads()->get();
-        $query = Summary::where('user_id' , $user->id)->with(['subject' , 'user' , 'subject.department'])->withCount(['downloads', 'likers']);
-        $sort = $request->input('sort', 'latest');
-        if($sort === "latest"){
-            $query->latest();
+
+    public function show(User $user)
+    {
+        $userSummariesCount = $user->summaries()->count();
+
+        $savedCount = $user->savedSummaries()->count();
+
+        $likesCount = $user->likedSummaries()->count();
+
+        $downloadsCount = $user->downloads()->count();
+
+
+        $totalLikes = Summary::where('user_id', $user->id)
+            ->withCount('likers')
+            ->get()
+            ->sum('likers_count');
+
+        if($user->role === 'admin'){
+            abort(403, 'لا يمكن عرض ملف تعريف المسؤول.');
         }
-        if($sort === "oldest"){
-            $query->oldest();
-        }
-        if($sort === "highest_likes"){
-            $query->orderByDesc('likers_count');
-        }
-        if($sort === "highest_downloads"){
-            $query->orderByDesc('downloads_count');
-        }
-        $summaries = $query->paginate(15)->withQueryString();
-        return view('user.profile' , compact('summaries' , 'user' ,'savedSummaries' ,'likedSummaries', 'totalLikes','downloadSummaries'));
+        return view('user.profile', compact(
+            'user',
+            'userSummariesCount',
+            'savedCount',
+            'likesCount',
+            'downloadsCount',
+            'totalLikes'
+        ));
     }
+
+
+    
     /**
      * Display the user's profile form.
      */

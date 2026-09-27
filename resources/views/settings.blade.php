@@ -112,35 +112,36 @@
                         <label class="font-semibold text-gray-700 block">البريد الإلكتروني</label>
                         <input type="email" value="{{ $user->email }}" name="email" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
                     </div>
+                    @if(auth()->user()->role !== 'admin')
+                        <div class="space-y-1.5">
+                            <label class="font-semibold text-gray-700 block">القسم</label>
+                            <select name="basic_department_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
+                                @if(!$user->basic_department_id) 
+                                    <option disabled selected>لم يحدد بعد </option>
+                                @else
+                                    <option disabled selected>اختر القسم</option>
+                                @endif
+                                @foreach($basic_departments as $department)
+                                    <option value="{{ $department->id }}" {{ $user->basic_department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <div class="space-y-1.5">
-                        <label class="font-semibold text-gray-700 block">القسم</label>
-                        <select name="basic_department_id" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
-                            @if(!$user->basic_department_id) 
-                                <option disabled selected>لم يحدد بعد </option>
-                            @else
-                                <option disabled selected>اختر القسم</option>
-                            @endif
-                            @foreach($basic_departments as $department)
-                                <option value="{{ $department->id }}" {{ $user->basic_department_id == $department->id ? 'selected' : '' }}>{{ $department->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="space-y-1.5">
-                        <label class="font-semibold text-gray-700 block">المرحلة الدراسية</label>
-                        <select name="level" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
-                            @if(!$user->level)
-                                <option disabled selected>لم يحدد بعد </option>
-                            @else
-                                <option disabled selected>اختر المرحلة الدراسية</option>
-                            @endif
-                            <option value="الأول" {{ $user->level == 'الأول' ? 'selected' : '' }}>الفرقة الأولى</option>
-                            <option value="الثاني" {{ $user->level == 'الثاني' ? 'selected' : '' }}>الفرقة الثانية</option>
-                            <option value="الثالث" {{ $user->level == 'الثالث' ? 'selected' : '' }}>الفرقة الثالثة</option>
-                            <option value="الرابع" {{ $user->level == 'الرابع' ? 'selected' : '' }}>الفرقة الرابعة</option>
-                        </select>
-                    </div>
+                        <div class="space-y-1.5">
+                            <label class="font-semibold text-gray-700 block">المرحلة الدراسية</label>
+                            <select name="level" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3.5 py-2.5 text-gray-800 focus:outline-none focus:border-sky-500">
+                                @if(!$user->level)
+                                    <option disabled selected>لم يحدد بعد </option>
+                                @else
+                                    <option disabled selected>اختر المرحلة الدراسية</option>
+                                @endif
+                                <option value="الأول" {{ $user->level == 'الأول' ? 'selected' : '' }}>الفرقة الأولى</option>
+                                <option value="الثاني" {{ $user->level == 'الثاني' ? 'selected' : '' }}>الفرقة الثانية</option>
+                                <option value="الثالث" {{ $user->level == 'الثالث' ? 'selected' : '' }}>الفرقة الثالثة</option>
+                                <option value="الرابع" {{ $user->level == 'الرابع' ? 'selected' : '' }}>الفرقة الرابعة</option>
+                            </select>
+                        </div>
+                    @endif
                 </div>
 
                 <div class="space-y-1.5 text-xs">

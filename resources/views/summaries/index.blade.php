@@ -45,7 +45,6 @@
                 </div>
             </div>
 
-            <!-- القسم الأيسر (بطاقة التفاعل ورفع الملخصات) -->
             <div   class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-5 text-center lg:text-right w-full lg:w-80 shrink-0 space-y-4 shadow-lg">
                 <div class="flex items-center justify-center lg:justify-start gap-3">
                     <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-amber-300 shrink-0">
@@ -60,10 +59,17 @@
                 <p class="text-[11px] text-sky-100 leading-relaxed">
                     شارك زملاؤك ملخصاتك الدراسية المتميزة واحصل على شارة ناشر موثق وشهادة تقدير الكلية.
                 </p>
-                <a href="{{ route('summaries.create') }}" class="w-full bg-white hover:bg-sky-50 text-sky-700 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                    <span>رفع ملخص جديد الآن</span>
-                </a>
+                @if(!auth()->check() || auth()->user()->role !== 'admin')
+                    <a href="{{ route('summaries.create') }}" class="w-full bg-white hover:bg-sky-50 text-sky-700 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        <span>رفع ملخص جديد الآن</span>
+                    </a>
+                @else
+                    <a href="#" class="w-full bg-white hover:bg-sky-50 text-sky-700 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition shadow-md">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        <span>رفع ملخص جديد الآن</span>
+                    </a>
+                @endif
             </div>
 
         </div>
@@ -182,27 +188,12 @@
 
             </div>
 
-            <div  class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white px-6 py-4 rounded-2xl border border-slate-200 shadow-sm">
-                <div class="text-slate-700 text-xs font-bold">
-                    @if($summaries->total() > 0)
-                        <span>عرض {{ $summaries->firstItem() }} إلى {{ $summaries->lastItem() }} من إجمالي {{ $summaries->total() }} ملخص منشور</span>
-                    @else
-                        <span>لا توجد ملخصات منشورة حتى الآن</span>
-                    @endif
-                </div>
-                <x-summaries-filter :route="route('summaries.index')" />
-            </div>
-    
-
-            <!-- شبكة البطاقات (Grid) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                @foreach ($summaries as $summary)
-                    <x-summary-card :summary="$summary"/>
-                @endforeach
-            </div>
 
 
-            <x-summaries-pagination :summaries="$summaries"/>
+            <livewire:summaries-list-index />
+
+
+            
             
         </main>
 @endsection

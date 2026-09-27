@@ -17,19 +17,8 @@ class SummaryController extends Controller
         // $summaries = Summary::with(['subject' , 'user' , 'subject.department'])->withCount(['downloads', 'likers'])->latest()->paginate(15);
 
         $query = Summary::with(['subject' , 'user' , 'subject.department'])->withCount(['downloads', 'likers']);
-        $sort = $request->input('sort', 'latest');
-        if($sort === "latest"){
-            $query->latest();
-        }
-        if($sort === "oldest"){
-            $query->oldest();
-        }
-        if($sort === "highest_likes"){
-            $query->orderByDesc('likers_count');
-        }
-        if($sort === "highest_downloads"){
-            $query->orderByDesc('downloads_count');
-        }
+        $search = $request->input('search');
+
         $summaries = $query->paginate(15)->withQueryString();
         return view('summaries.index' , compact('summaries' , 'departments' , 'departmentsCount' ,'subjectsCount' ,'downloadsCount' ,'allSummaries'));
     }

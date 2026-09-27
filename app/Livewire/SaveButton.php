@@ -16,6 +16,9 @@ class SaveButton extends Component
     }
 
     public function toggleSave(){
+        if (!auth()->check() || auth()->user()->role !== 'student') {
+            return;
+        }
         $this->summary->savers()->toggle(auth()->id());
         $this->saved= !$this->saved;
         

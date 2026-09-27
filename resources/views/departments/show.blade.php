@@ -14,7 +14,7 @@
                     <div class="space-y-2 text-right">
                         <!-- مسار التنقل (Breadcrumbs) مصغر داخل البانر -->
                         <nav class="flex items-center gap-2 text-xs text-sky-200 font-medium">
-                            <a href="#" class="hover:text-white transition">الرئيسية</a>
+                            <a href="{{route('summaries.index')}}" class="hover:text-white transition">الرئيسية</a>
                             <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i>
                             <span class="text-white font-bold">{{ $department->name }}</span>
                         </nav>
@@ -61,44 +61,8 @@
                         </div>
 
             </div>
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white px-6 py-4 rounded-2xl border border-slate-200 shadow-sm">
-                
-                <!-- عدد النتائج في الجهة اليمنى -->
-                <div class="text-slate-700 text-xs font-bold">
-                    @if($summaries->total() > 0)
-                        <span>عرض {{ $summaries->firstItem() }} إلى {{ $summaries->lastItem() }} من إجمالي {{ $summaries->total() }} ملخص منشور</span>
-                    @else
-                        <span>لا توجد ملخصات منشورة حتى الآن</span>
-                    @endif
-                </div>
+            <livewire:summaries-list-index :departmentId="$department->id"/>
 
-                
-                <x-summaries-filter :route="route('departments.show', $department->id)" />
-
-            </div>
-
-            <!-- شبكة البطاقات (الملخصات الخاصة بالقسم) -->
-            <div class="space-y-4">
-
-                @if($summaries->count() > 0)
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach ($summaries as $summary)
-                            <x-summary-card :summary="$summary"/>
-                        @endforeach
-                    </div>
-                @else
-                    <!-- حالة عدم وجود ملخصات -->
-                    <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-3 shadow-sm">
-                        <div class="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center mx-auto">
-                            <i data-lucide="folder-open" class="w-6 h-6"></i>
-                        </div>
-                        <h3 class="text-sm font-bold text-slate-800">لا توجد ملخصات مضافة حتى الآن</h3>
-                        <p class="text-xs text-slate-500 max-w-sm mx-auto">كن أول من يشارك زملائك ملخصات هذا القسم واربح نقاط التميز في المنصة.</p>
-                    </div>
-                @endif
-            </div>
-
-            <x-summaries-pagination :summaries="$summaries"/>
 
         </main>
 @endsection

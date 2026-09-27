@@ -53,24 +53,6 @@
                     <span class="text-[12px]">{{ $summary->downloads_count ?? 0 }} تنزيل</span>
                 </div>
             </div>
-            @if($summary->user_id == auth()->id())
-                <div class="flex items-center gap-1 font-bold ">
-                    <form action="{{ route('summaries.destroy', $summary->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" onclick="return confirm('هل أنت متأكد من رغبتك في حذف هذا الملخص؟')" class="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 transition" title="حذف">
-                            <!-- أيقونة Trash-2 -->
-                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                            <span class="text-[9px] font-bold mt-0.5">حذف</span>
-                        </button>
-                    </form>
-                    <a href="{{route('summaries.edit' , $summary->id)}}" class="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-700 transition" title="تعديل">
-                        <!-- أيقونة Edit-3 -->
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-                        <span class="text-[9px] font-bold mt-0.5">تعديل</span>
-                    </a>
-                </div>
-            @endif    
         </div>
     </div>
 
@@ -79,16 +61,16 @@
         
         
 
-          
-          <!-- الجانب الأيمن: زر التحميل الرئيسي، حفظ، إعجاب، ومشاركة -->
-          <div class="flex flex-wrap items-center gap-2.5">
-              
-              <!-- 1. زر التحميل الرئيسي -->
-              <a href="{{ $summary->file_path ?? '#' }}" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-5 rounded-2xl text-xs flex items-center gap-2 shadow-sm transition">
-                  <i data-lucide="download" class="w-4 h-4"></i>
-                  <span>تحميل الملف الآن - PDF عالي الدقة ({{ $summary->file_size ?? '6.4 MB' }})</span>
-              </a>
-      
+        
+            <!-- الجانب الأيمن: زر التحميل الرئيسي، حفظ، إعجاب، ومشاركة -->
+            <div class="flex flex-wrap items-center gap-2.5">
+                
+                <!-- 1. زر التحميل الرئيسي -->
+                <a href="{{ $summary->file_path ?? '#' }}" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-5 rounded-2xl text-xs flex items-center gap-2 shadow-sm transition">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>تحميل الملف الآن - PDF عالي الدقة ({{ $summary->file_size ?? '6.4 MB' }})</span>
+                </a>
+    
                     <livewire:like-button :summary="$summary" variant="button" />
 
                     <livewire:save-button :summary="$summary" variant="button" />
@@ -101,11 +83,41 @@
     
         </div>
     
-        <!-- الجانب الأيسر: زر الإبلاغ عن خطأ أو تعديل بالمحتوى -->
-            <button class="bg-rose-50  hover:bg-rose-100 text-rose-700 border border-rose-100 font-semibold py-2.5 px-4 rounded-2xl text-xs flex items-center gap-2 transition">
-                <span>الإبلاغ عن خطأ أو تعديل بالمحتوى</span>
-                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i>
-            </button>
+            @if($summary->user_id == auth()->id() && auth()->user()->role === 'student')
+                <div class="flex items-center gap-1 font-bold ">
+                    <form action="{{ route('summaries.destroy', $summary->id) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" onclick="return confirm('هل أنت متأكد من رغبتك في حذف هذا الملخص؟')" class="flex cursor-pointer flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 transition" title="حذف">
+                            <!-- أيقونة Trash-2 -->
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                            <span class="text-[9px] font-bold mt-0.5">حذف</span>
+                        </button>
+                    </form>
+                    <a href="{{route('summaries.edit' , $summary->id)}}" class="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-700 transition" title="تعديل">
+                        <!-- أيقونة Edit-3 -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                        <span class="text-[9px] font-bold mt-0.5">تعديل</span>
+                    </a>
+                </div>
+            @endif
+            @if($summary->user_id !== auth()->id() && auth()->user()->role === 'student')
+                <button class="bg-rose-50  hover:bg-rose-100 text-rose-700 border border-rose-100 font-semibold py-2.5 px-4 rounded-2xl text-xs flex items-center gap-2 transition">
+                    <span>الإبلاغ عن خطأ أو تعديل بالمحتوى</span>
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i>
+                </button>
+            @endif
+            @if(auth()->check() && auth()->user()->role === 'admin')
+                <form action="{{ route('summaries.destroy', $summary->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" onclick="return confirm('هل أنت متأكد من رغبتك في حذف هذا الملخص؟')" class="flex cursor-pointer flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 transition" title="حذف">
+                        <!-- أيقونة Trash-2 -->
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        <span class="text-[9px] font-bold mt-0.5">حذف</span>
+                    </button>
+                </form>
+            @endif
     
     </div>
 <!-- شريط الأزرار والتفاعلات السفلي -->
