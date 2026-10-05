@@ -2,12 +2,24 @@
 
 @section('content')
 <main class="flex-grow p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
-            
-    <x-messages />
-
+        
 
     <!-- بطاقات الإحصائيات السريعة -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- البطاقة الثالثة -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-slate-500">طلبات الرفع</span>
+                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-0-5H20"/></svg>
+                </div>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <span class="text-2xl font-black text-slate-900">{{ $uplaodRequests->count()}}</span>
+                <span class="text-[11px] font-semibold text-slate-400">ملخصات قيد الإنتظار</span>
+            </div>
+        </div>
         
         <!-- البطاقة الأولى -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3">
@@ -18,7 +30,7 @@
                 </div>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-slate-900">{{ $totalSummaries ?? 0 }}</span>
+                <span class="text-2xl font-black text-slate-900">{{ $summariesCount }}</span>
                 <span class="text-[11px] font-semibold text-emerald-600">ملخص نشط</span>
             </div>
         </div>
@@ -32,7 +44,7 @@
                 </div>
             </div>
             <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-slate-900">{{ $totalUsers ?? 0 }}</span>
+                <span class="text-2xl font-black text-slate-900">{{ $totalUsers }}</span>
                 <span class="text-[11px] font-semibold text-slate-400">حسابات نشطة</span>
             </div>
         </div>
@@ -51,19 +63,6 @@
             </div>
         </div>
 
-        <!-- البطاقة الثالثة -->
-        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-2xs space-y-3">
-            <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-slate-500">طلبات الرفع</span>
-                <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-0-5H20"/></svg>
-                </div>
-            </div>
-            <div class="flex items-baseline gap-2">
-                <span class="text-2xl font-black text-slate-900">{{ $totalRequests ?? 0 }}</span>
-                <span class="text-[11px] font-semibold text-slate-400">مواد الترم الحالي</span>
-            </div>
-        </div>
 
         
 
@@ -92,7 +91,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 text-xs text-slate-700 font-medium">
                     
-                    @foreach($summaries as $summary)
+                    @foreach($uplaodRequests as $summary)
                         <tr class="hover:bg-slate-50/60 transition">
                             <td class="py-4 px-6 font-bold text-slate-900">
                                 <a href="{{ route('summaries.show', $summary) }}" class="text-slate-700 duration-300 hover:underline hover:text-slate-900">
@@ -123,14 +122,12 @@
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <div class="flex items-center justify-center gap-1.5">
-                                    @unless(true)
-                                        <a href="#" class="p-1.5 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" title="قبول ونشر">
-                                            <i data-lucide="check" class="w-4 h-4"></i>
-                                        </a>
-                                        <a href="#" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition" title="رفض">
-                                            <i data-lucide="x" class="w-4 h-4"></i>
-                                        </a>
-                                    @endunless
+                                    <a href="#" class="p-1.5 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" title="قبول ونشر">
+                                        <i data-lucide="check" class="w-4 h-4"></i>
+                                    </a>
+                                    <a href="#" class="p-1.5 text-slate-500 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition" title="رفض">
+                                        <i data-lucide="x" class="w-4 h-4"></i>
+                                    </a>
                                     <a href="{{ route('summaries.show', $summary) }}" class="p-1.5 text-slate-500 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition" title="مشاهدة">
                                         <i data-lucide="eye" class="w-4 h-4"></i>
                                     </a>
@@ -147,25 +144,25 @@
         </div>
         
     </div>
-    @if ($summaries->hasPages())
+    @if ($uplaodRequests->hasPages())
     <div class="flex items-center justify-center pt-6 border-t border-slate-200">
         <div class="flex items-center gap-1.5 flex-wrap justify-center">
             
             {{-- زر الصفحة السابقة --}}
-            @if ($summaries->onFirstPage())
+            @if ($uplaodRequests->onFirstPage())
                 <span class="w-9 h-9 rounded-xl border border-slate-200 flex items-center justify-center text-slate-300 bg-slate-50 text-xs cursor-not-allowed">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </span>
             @else
-                <a href="{{ $summaries->previousPageUrl() }}" 
+                <a href="{{ $uplaodRequests->previousPageUrl() }}" 
                    class="w-9 h-9 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:bg-slate-50 text-xs transition shadow-xs cursor-pointer">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </a>
             @endif
 
             {{-- أرقام الصفحات --}}
-            @foreach ($summaries->getUrlRange(1, $summaries->lastPage()) as $page => $url)
-                @if ($page == $summaries->currentPage())
+            @foreach ($uplaodRequests->getUrlRange(1, $uplaodRequests->lastPage()) as $page => $url)
+                @if ($page == $uplaodRequests->currentPage())
                     <span class="w-9 h-9 rounded-xl bg-blue-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">{{ $page }}</span>
                 @else
                     <a href="{{ $url }}" 
@@ -176,8 +173,8 @@
             @endforeach
 
             {{-- زر الصفحة التالية --}}
-            @if ($summaries->hasMorePages())
-                <a href="{{ $summaries->nextPageUrl() }}" 
+            @if ($uplaodRequests->hasMorePages())
+                <a href="{{ $uplaodRequests->nextPageUrl() }}" 
                    class="w-9 h-9 rounded-xl border border-slate-200 bg-white flex items-center justify-center text-slate-700 hover:bg-slate-50 text-xs transition shadow-xs cursor-pointer">
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </a>

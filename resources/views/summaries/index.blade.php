@@ -4,7 +4,7 @@
         <!-- محتوى الصفحة الرئيسية -->
         <main class="flex-grow p-6 lg:p-8 space-y-6 max-w-7xl mx-auto w-full">
             
-        <x-messages />
+        
             <!-- قسم البانر الرئيسي والإحصائيات -->
 <div class="space-y-6">
     
@@ -76,7 +76,7 @@
     </div>
 
     <!-- كروت الإحصائيات الأربعة -->
-    <!-- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         
         <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
             <div class="space-y-1">
@@ -130,7 +130,7 @@
             </div>
         </div>
 
-    </div> -->
+    </div> 
 </div>
 
             <!-- قسم الفلاتر التفاعلية (الأقسام ثم المواد) -->

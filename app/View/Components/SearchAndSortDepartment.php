@@ -6,12 +6,16 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class Messages extends Component
+class SearchAndSortDepartment extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
+    public function __construct(
+        public $departments,
+        public $department,
+        public $subjects,
+    )
     {
         //
     }
@@ -21,6 +25,6 @@ class Messages extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.messages');
+        return view('components.search-and-sort-department');
     }
 }

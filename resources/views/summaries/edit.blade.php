@@ -3,7 +3,7 @@
 @section('content')
 
 <main class="flex-grow p-4 lg:p-8 space-y-6 max-w-5xl mx-auto w-full">
-    <x-messages />
+    
     <!-- عنوان الصفحة -->
     <div class="relative bg-gradient-to-br from-sky-50 via-white to-sky-50 rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
         <div class="flex items-center gap-4">

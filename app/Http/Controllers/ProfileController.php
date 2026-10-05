@@ -28,11 +28,12 @@ class ProfileController extends Controller
 
 
         $totalLikes = Summary::where('user_id', $user->id)
+            ->where('status' , 'accepted')
             ->withCount('likers')
             ->get()
             ->sum('likers_count');
 
-        if($user->role === 'admin'){
+        if ($user->role === 'admin') {
             abort(403, 'لا يمكن عرض ملف تعريف المسؤول.');
         }
         return view('user.profile', compact(
@@ -46,7 +47,7 @@ class ProfileController extends Controller
     }
 
 
-    
+
     /**
      * Display the user's profile form.
      */
@@ -144,4 +145,3 @@ class ProfileController extends Controller
         return back()->with('success', 'تم رفع الصورة بنجاح.');
     }
 }
-

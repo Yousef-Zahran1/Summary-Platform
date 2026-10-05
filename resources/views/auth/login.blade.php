@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول - منصة الوظائف</title>
-    <!-- تضمين Tailwind CSS -->
+    <title>تسجيل الدخول - منصة ملخصات كلية العلوم</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- خط Cairo العربي -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -33,7 +31,6 @@
                         </div>
                     @endif
                 <form class="space-y-6" action="{{ route('login') }}" method="POST">
-                    <!-- لا تنسى @csrf في لارافيل -->
                     @csrf
                     <div>
                         <label for="email" class="block text-sm font-medium text-gray-700">البريد الإلكتروني</label>
@@ -66,7 +63,6 @@
                     </div>
                 </form>
 
-                <!-- رابط إنشاء الحساب في الأسفل -->
                 <div class="mt-6 text-center text-sm text-gray-600">
                     ليس لديك حساب؟ <a href="{{route('register')}}" class="font-medium text-indigo-600 hover:text-indigo-500">إنشاء حساب جديد</a>
                 </div>

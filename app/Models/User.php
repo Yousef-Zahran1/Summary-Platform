@@ -7,11 +7,14 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -25,7 +28,8 @@ class User extends Authenticatable
         'level',
         'bio',
         'basic_department_id',
-        'avatar'
+        'avatar',
+        'is_banned',
     ];
 
     /**
@@ -65,5 +69,22 @@ class User extends Authenticatable
     public function downloads()
     {
         return $this->belongsToMany(Summary::class , 'downloads' , 'user_id' , 'summary_id')->withTimestamps();;
+    }
+    protected static function booted()
+    {
+        // عند حذف اليوزر → احذف ملخصاته (soft delete)
+        static::deleting(function ($user) {
+            $user->summaries()->delete();
+        });
+
+        // عند استرجاع اليوزر → رجّع ملخصاته
+        static::restoring(function ($user) {
+            $user->summaries()->onlyTrashed()->restore();
+        });
+
+        // عند الحذف النهائي → احذف الملخصات نهائيًا
+        static::forceDeleting(function ($user) {
+            $user->summaries()->onlyTrashed()->forceDelete();
+        });
     }
 }

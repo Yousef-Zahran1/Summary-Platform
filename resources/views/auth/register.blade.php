@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إنشاء حساب جديد - منصة الوظائف</title>
-    <!-- تضمين Tailwind CSS -->
+    <title>انشاء حساب جديد - منصة ملخصات كلية العلوم</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- خط Cairo العربي -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -14,6 +13,7 @@
         }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-800 antialiased">
 
     <div class="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -45,13 +45,8 @@
                                 الاسم الأول
                             </label>
 
-                            <input
-                                type="text"
-                                name="first_name"
-                                value="{{ old('first_name') }}"
-                                required
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            >
+                            <input type="text" name="first_name" value="{{ old('first_name') }}" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
 
                         <div>
@@ -59,13 +54,8 @@
                                 اسم العائلة
                             </label>
 
-                            <input
-                                type="text"
-                                name="last_name"
-                                value="{{ old('last_name') }}"
-                                required
-                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            >
+                            <input type="text" name="last_name" value="{{ old('last_name') }}" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                         </div>
 
                     </div>
@@ -75,13 +65,8 @@
                             البريد الإلكتروني
                         </label>
 
-                        <input
-                            type="email"
-                            name="email"
-                            value="{{ old('email') }}"
-                            required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        >
+                        <input type="email" name="email" value="{{ old('email') }}" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
 
                     <div>
@@ -89,12 +74,8 @@
                             كلمة المرور
                         </label>
 
-                        <input
-                            type="password"
-                            name="password"
-                            required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        >
+                        <input type="password" name="password" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
 
                     <div>
@@ -102,20 +83,14 @@
                             تأكيد كلمة المرور
                         </label>
 
-                        <input
-                            type="password"
-                            name="password_confirmation"
-                            required
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        >
+                        <input type="password" name="password_confirmation" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     </div>
 
                     <div>
-                        <button
-                            type="submit"
-                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                        >
-                            تسجيل الحساب
+                        <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            إنشاء الحساب
                         </button>
                     </div>
 
@@ -133,4 +108,5 @@
     </div>
 
 </body>
+
 </html>

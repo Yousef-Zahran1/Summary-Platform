@@ -21,6 +21,8 @@
     </head>
 
 <body class="min-h-screen flex antialiased selection:bg-sky-600 selection:text-white">
+    @livewire('confirm-action')
+    @livewire('messages')
 
     <!-- القائمة الجانبية بالوضع الفاتح -->
     <aside class="w-72 bg-white border-l border-slate-200 hidden lg:flex flex-col justify-between sticky top-0 h-screen z-30 p-6 shadow-sm">
@@ -43,17 +45,7 @@
             <!-- روابط التصفح -->
             <div class="space-y-1.5 pt-2">
                 <span class="text-[10px] font-black text-slate-400 tracking-widest block uppercase px-3 mb-2">القائمة الرئيسية</span>
-                @if(auth()->check() && auth()->user()->role == 'admin')
-                    <a href="{{route('dashboard')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('dashboard') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="12" y1="18" x2="12" y2="12"></line>
-                            <line x1="9" y1="15" x2="15" y2="15"></line>
-                        </svg>
-                        <span>طلبات الرفع</span>
-                    </a>
-                @endif
+
                 <a href="{{route('summaries.index')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('summaries.index') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">
                     <!-- أيقونة الرئيسية SVG -->
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -63,15 +55,6 @@
                     <span>الصفحة الرئيسية</span>
                 </a>
                 @if(auth()->check() && auth()->user()->role == 'admin')
-                    <a href="{{route('admin.users.index')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('admin.users.index') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">                   
-                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                        <span>المستخدمين</span>
-                    </a>
                     <a href="{{route('admin.summaries.index')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('admin.summaries.index') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">
                         <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
@@ -80,8 +63,34 @@
                             <line x1="16" y1="17" x2="8" y2="17"></line>
                             <polyline points="10 9 9 9 8 9"></polyline>
                         </svg>
-                        <span>الملخصات</span>
+                        <span>التحكم فى الملخصات</span>
                     </a>
+                    <a href="{{route('admin.users.index')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('admin.users.index') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">                   
+                        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <span>التحكم فى المستخدمين</span>
+                    </a>
+                    <a href="{{route('admin.subjects.index')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('admin.subjects.index') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">                   
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"></path>
+                        </svg>
+                        <span>التحكم فى المواد</span>
+                    </a>
+                    <a href="{{route('admin.departments.index')}}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('admin.departments.index') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">                   
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                        <span>التحكم فى الأقسام</span>
+                    </a>
+                    
                 @endif
                 @if(!auth()->check() || auth()->user()->role !== 'admin')
                     <a href="{{auth()->check() ? route('profile.show', auth()->id()) : route('login') }}" class="flex items-center gap-3 px-3.5 py-3 rounded-2xl {{ request()->routeIs('profile.show') ? 'bg-sky-50 text-sky-600 font-bold text-xs border border-sky-100' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-semibold'}} text-xs transition">

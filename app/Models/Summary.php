@@ -3,9 +3,20 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Summary extends Model
 {
+    use SoftDeletes;
+    protected static function booted()
+    {
+        static::deleting(function ($summary) {
+            if (!$summary->isForceDeleting()) {
+                $summary->deleted_by = auth()->id();
+                $summary->saveQuietly(); 
+            }
+        });
+    }
     public function subject(){
         return $this->belongsTo(Subject::class);
     }
@@ -26,7 +37,9 @@ class Summary extends Model
         'title',
         'file_path',
         'user_id',
+        'status',
         'subject_id',
-        'description'
+        'description',
+        'submission_token',
     ];
 }

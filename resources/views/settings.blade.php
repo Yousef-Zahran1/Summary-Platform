@@ -3,7 +3,7 @@
 @section("content")
         <!-- محتوى صفحة الإعدادات مع تفعيل Alpine.js -->
         <main class="flex-grow p-6 lg:p-8 space-y-6 max-w-5xl mx-auto w-full" x-data="{ activeTab: 'profile' }">
-            <x-messages />
+            
             <!-- عنوان الصفحة -->
             <div class="flex items-center gap-3 pt-2">
                 <div class="text-sky-600">

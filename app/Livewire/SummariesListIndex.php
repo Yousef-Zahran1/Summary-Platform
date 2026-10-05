@@ -38,7 +38,7 @@ class SummariesListIndex extends Component
 
     public function render()
     {
-        $query = Summary::with(['subject' , 'user' , 'subject.department'])->withCount(['downloads', 'likers']);
+        $query = Summary::with(['subject' , 'user' , 'subject.department'])->withCount(['downloads', 'likers'])->where('status' , 'accepted');
 
         $search = $this->search;;
         if ($search) {

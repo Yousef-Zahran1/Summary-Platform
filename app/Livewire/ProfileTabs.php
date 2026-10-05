@@ -4,9 +4,10 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\Attributes\Url;
-use Livewire\Attributes\On;
 use App\Models\User;
 use Livewire\WithPagination;
+use Livewire\Attributes\On;
+use App\Models\Summary;
 
 class ProfileTabs extends Component
 {
@@ -35,13 +36,45 @@ class ProfileTabs extends Component
         $this->sort = 'latest';
         $this->resetPage();
     }
+
+    #[On('restoreSummary')]
+    public function restoreSummary($id)
+    {
+        $summary = Summary::onlyTrashed()
+            ->where('user_id', auth()->id())
+            ->where('deleted_by', auth()->id())
+            ->findOrFail($id);
+
+        $summary->restore();
+        $summary->update(['deleted_by' => null]);
+
+        $this->dispatch('notify', type: 'success', message: 'تم استعادة الملخص بنجاح.');
+    }
+
+    #[On('forceDeleteSummary')]
+    public function forceDeleteSummary($id)
+    {
+        $summary = Summary::onlyTrashed()
+            ->where('user_id', auth()->id())
+            ->where('deleted_by', auth()->id())
+            ->findOrFail($id);
+
+        $summary->forceDelete();
+
+        $this->dispatch('notify', type: 'success', message: 'تم حذف الملخص نهائياً.');
+    }
+
+
     public function render()
     {
         $user = $this->user;
         $query = match ($this->tab) {
-            'my-summaries'    => $user->summaries(),
+            'my-summaries'    => $user->summaries()->where('status' , 'accepted'),
             'likes'           => $user->likedSummaries(),
             'saved-summaries' => $user->savedSummaries(),
+            'pending-summaries' => $user->summaries()->where('status' , 'pending'),
+            'rejected-summaries'  => $user->summaries()->where('status', 'rejected'),
+            'trashed-summaries' => $user->summaries()->onlyTrashed()->where('deleted_by', $user->id),
             default           => $user->summaries(),
         };
         $query->withCount(['likers', 'downloads']);
@@ -74,7 +107,10 @@ class ProfileTabs extends Component
         $summaries = $summariesQuery->paginate(15)->withQueryString();
         return view('livewire.profile-tabs', [
             'summaries'              => $summaries,
-            'userSummariesCount'=> $user->summaries->count(),
+            'userSummariesCount'=> $user->summaries->where('status' , 'accepted')->count(),
+            'pendingSummariesCount'=> $user->summaries->where('status' , 'pending')->count(),
+            'rejectedSummariesCount' => $user->summaries->where('status', 'rejected')->count(),
+            'trashedSummariesCount'  => $user->summaries()->onlyTrashed()->where('deleted_by', auth()->id())->count(),
             'savedCount'        => $user->savedSummaries->count(),
             'likesCount'        => $user->likedSummaries->count(),
             'downloadsCount'    => $user->downloads->count(),

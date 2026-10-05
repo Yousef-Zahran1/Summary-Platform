@@ -27,7 +27,7 @@ class ProfileUpdateRequest extends FormRequest
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
             'basic_department_id' => ['nullable', 'exists:departments,id'],
-            'level' => ['nullable', 'string', 'max:255'],
+            'level' => ['nullable', Rule::in(['الأول', 'الثاني', 'الثالث', 'الرابع'])],
             'bio' => ['nullable', 'string', 'max:500'],
             // 'avatar' => ['nullable', 'image', 'max:2048'],
         ];

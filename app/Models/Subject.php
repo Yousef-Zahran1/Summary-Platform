@@ -12,4 +12,9 @@ class Subject extends Model
     public function summaries(){
         return $this->hasMany(Summary::class);
     }
+    protected $fillable = [
+        'name',
+        'code',
+        'department_id'
+    ];
 }

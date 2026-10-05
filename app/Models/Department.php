@@ -12,4 +12,7 @@ class Department extends Model
     public function summaries(){
         return $this->hasManyThrough(Summary::class , Subject::class);
     }
+    protected $fillable=[
+        'name'
+    ];
 }
