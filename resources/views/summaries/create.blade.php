@@ -40,21 +40,28 @@
                         accept=".pdf,.doc,.docx,.ppt,.pptx">
                 </label>
 
-                <!-- معاينة الملف بعد الاختيار (وهمي) -->
-                <div class="hidden items-center justify-between gap-3 bg-sky-50 border border-sky-100 rounded-xl p-3"
-                    id="file-preview">
+                <!-- معاينة الملف بعد الاختيار -->
+                <div class="hidden items-center justify-between gap-3 bg-sky-50 border border-sky-100 rounded-xl p-3" id="file-preview">
                     <div class="flex items-center gap-3">
-                        <div
-                            class="w-10 h-10 rounded-lg bg-white text-sky-600 flex items-center justify-center border border-sky-100">
-                            <i data-lucide="file-text" class="w-5 h-5"></i>
+                        <div class="w-10 h-10 rounded-lg bg-white text-sky-600 flex items-center justify-center border border-sky-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
                         </div>
                         <div>
-                            <p class="text-xs font-bold text-slate-800">اسم_الملف.pdf</p>
-                            <p class="text-[10px] text-slate-500">2.4 ميجابايت</p>
+                            <p class="text-xs font-bold text-slate-800" id="file-name">اسم_الملف.pdf</p>
+                            <p class="text-[10px] text-slate-500" id="file-size">0 ميجابايت</p>
                         </div>
                     </div>
-                    <button type="button" class="text-slate-400 hover:text-red-500 transition">
-                        <i data-lucide="x" class="w-4 h-4"></i>
+                    <button type="button" id="remove-file-btn" class="text-slate-400 hover:text-red-500 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
                     </button>
                 </div>
 
@@ -112,7 +119,7 @@
 
             <input type="hidden" name="submission_token" value="{{ Str::uuid() }}">
 
-            <!-- أزرار الحفظ -->
+
             <div class="flex items-center justify-end gap-3">
                 <a href="#"
                     class="bg-white hover:bg-slate-50 text-slate-600 font-bold py-2.5 px-5 rounded-xl text-xs border border-slate-200 transition">
@@ -144,14 +151,40 @@
                 submitText.textContent = 'جاري النشر...';
             });
         });
-        // معاينة اسم الملف المرفوع
+
         document.getElementById('summary_file')?.addEventListener('change', function(e) {
-            const preview = document.getElementById('file-preview');
-            if (e.target.files.length > 0) {
-                preview.classList.remove('hidden');
-                preview.classList.add('flex');
-                preview.querySelector('p.font-bold').textContent = e.target.files[0].name;
+        const preview = document.getElementById('file-preview');
+        const fileNameEl = document.getElementById('file-name');
+        const fileSizeEl = document.getElementById('file-size');
+
+        if (e.target.files.length > 0) {
+            const file = e.target.files[0];
+
+            fileNameEl.textContent = file.name;
+
+            const sizeInBytes = file.size;
+            let formattedSize = '';
+
+            if (sizeInBytes < 1024 * 1024) {
+                formattedSize = (sizeInBytes / 1024).toFixed(1) + ' كيلوبايت';
+            } else {
+                formattedSize = (sizeInBytes / (1024 * 1024)).toFixed(1) + ' ميجابايت';
             }
+            
+            fileSizeEl.textContent = formattedSize;
+
+            preview.classList.remove('hidden');
+            preview.classList.add('flex');
+        }
+        });
+
+        document.getElementById('remove-file-btn')?.addEventListener('click', function() {
+            const fileInput = document.getElementById('summary_file');
+            const preview = document.getElementById('file-preview');
+
+            fileInput.value = '';
+            preview.classList.remove('flex');
+            preview.classList.add('hidden'); 
         });
     </script>
 @endsection

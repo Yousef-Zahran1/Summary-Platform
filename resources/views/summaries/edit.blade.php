@@ -1,148 +1,216 @@
 @extends('layouts.app')
 
 @section('content')
+    <main class="flex-grow p-4 lg:p-8 space-y-6 max-w-5xl mx-auto w-full">
 
-<main class="flex-grow p-4 lg:p-8 space-y-6 max-w-5xl mx-auto w-full">
-    
-    <!-- عنوان الصفحة -->
-    <div class="relative bg-gradient-to-br from-sky-50 via-white to-sky-50 rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
-        <div class="flex items-center gap-4">
-            <div class="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center shadow-sm flex-shrink-0">
-                <i data-lucide="file-edit" class="w-6 h-6"></i>
-            </div>
-            <div>
-                <h1 class="text-lg font-black text-slate-900">تعديل الملخص الدراسي (وضع المعاينة)</h1>
-                <p class="text-xs text-slate-500 font-medium mt-1">قم بتحديث بيانات الملخص أو استبدال الملف المرفق إذا لزم الأمر</p>
+        <!-- عنوان الصفحة -->
+        <div
+            class="relative bg-gradient-to-br from-sky-50 via-white to-sky-50 rounded-3xl p-6 lg:p-8 shadow-sm border border-slate-100">
+            <div class="flex items-center gap-4">
+                <div
+                    class="w-12 h-12 rounded-2xl bg-sky-600 text-white flex items-center justify-center shadow-sm flex-shrink-0">
+                    <i data-lucide="file-edit" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-black text-slate-900">تعديل الملخص الدراسي</h1>
+                    <p class="text-xs text-slate-500 font-medium mt-1">قم بتحديث بيانات الملخص أو استبدال الملف المرفق إذا
+                        لزم الأمر</p>
+                </div>
             </div>
         </div>
-    </div>
 
-    <form action="{{route('summaries.update' , $summary->id)}}" method="POST" enctype="multipart/form-data" class="space-y-6">
-        @csrf 
-        @method('PUT')
+        <form action="{{ route('summaries.update', $summary->id) }}" method="POST" enctype="multipart/form-data"
+            class="space-y-6">
+            @csrf
+            @method('PUT')
 
-        <!-- منطقة رفع الملف -->
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
-            <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <i data-lucide="file-up" class="w-4 h-4 text-sky-600"></i>
-                ملف الملخص الحالي والمرفقات
-            </h2>
+            <!-- منطقة رفع الملف -->
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="file-up" class="w-4 h-4 text-sky-600"></i>
+                    ملف الملخص
+                </h2>
 
-            <!-- عرض الملف الحالي -->
-            <div class="flex items-center justify-between gap-3 bg-sky-50/60 border border-sky-100 rounded-2xl p-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-white text-sky-600 flex items-center justify-center border border-sky-100 shadow-xs">
-                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                <!-- عرض الملف الحالي -->
+                @if ($summary->file_path)
+                    <div
+                        class="flex items-center justify-between gap-3 bg-sky-50/60 border border-sky-100 rounded-2xl p-4">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-white text-sky-600 flex items-center justify-center border border-sky-100 shadow-xs">
+                                <i data-lucide="file-text" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-slate-800">الملف الحالي المرفق</p>
+                                <a href="{{ asset('storage/' . $summary->file_path) }}" target="_blank"
+                                    class="text-[11px] text-sky-600 hover:underline font-semibold">
+                                    تحميل أو معاينة الملف الحالي
+                                </a>
+                            </div>
+                        </div>
+                        <span
+                            class="text-[10px] text-slate-400 font-medium bg-white px-2.5 py-1 rounded-lg border border-slate-100">
+                            {{ strtoupper(pathinfo($summary->file_path, PATHINFO_EXTENSION)) }}
+                        </span>
                     </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-800">الملف الحالي المرفق.pdf</p>
-                        <a href="{{ $summary->file_path }}" target="_blank" class="text-[11px] text-sky-600 hover:underline font-semibold">تحميل أو معاينة الملف الحالي</a>
+                @endif
+
+                <!-- منطقة رفع ملف جديد -->
+                <label for="summary_file"
+                    class="relative flex flex-col items-center justify-center gap-2 w-full py-8 px-4 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer text-center">
+                    <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center">
+                        <i data-lucide="upload" class="w-6 h-6"></i>
                     </div>
+                    <span class="text-sm font-bold text-slate-700">استبدال الملف بملف جديد (اختياري)</span>
+                    <span class="text-[11px] text-slate-400">PDF, DOCX, PPTX — بحد أقصى 25 ميجابايت</span>
+                    <input id="summary_file" name="summary_file" type="file" class="hidden"
+                        accept=".pdf,.doc,.docx,.ppt,.pptx">
+                </label>
+
+                <!-- معاينة الملف الجديد بعد الاختيار -->
+                <div class="hidden items-center justify-between gap-3 bg-emerald-50 border border-emerald-100 rounded-xl p-3"
+                    id="file-preview">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-lg bg-white text-emerald-600 flex items-center justify-center border border-emerald-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="w-5 h-5">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-800" id="file-name">اسم_الملف.pdf</p>
+                            <p class="text-[10px] text-slate-500" id="file-size">0 ميجابايت</p>
+                        </div>
+                    </div>
+                    <button type="button" id="remove-file-btn" class="text-slate-400 hover:text-red-500 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="w-4 h-4">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
                 </div>
-                <span class="text-[10px] text-slate-400 font-medium bg-white px-2.5 py-1 rounded-lg border border-slate-100">PDF</span>
             </div>
 
-            <label for="summary_file"
-                   class="relative flex flex-col items-center justify-center gap-2 w-full py-8 px-4 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 hover:bg-sky-50/50 hover:border-sky-300 transition cursor-pointer text-center">
-                <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center">
-                    <i data-lucide="upload" class="w-6 h-6"></i>
-                </div>
-                <span class="text-sm font-bold text-slate-700">استبدال الملف بملف جديد (اختياري)</span>
-                <span class="text-[11px] text-slate-400">PDF, DOCX, PPTX — بحد أقصى 25 ميجابايت</span>
-                <input id="summary_file" name="summary_file" type="file" class="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx">
-            </label>
+            <!-- بيانات الملخص -->
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-5">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-sky-600"></i>
+                    تفاصيل الملخص
+                </h2>
 
-            <!-- معاينة الملف الجديد بعد الاختيار -->
-            <div class="hidden items-center justify-between gap-3 bg-emerald-50 border border-emerald-100 rounded-xl p-3" id="file-preview">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-white text-emerald-600 flex items-center justify-center border border-emerald-100">
-                        <i data-lucide="file-text" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <p class="text-xs font-bold text-slate-800" id="file-name-display">اسم_الملف.pdf</p>
-                        <p class="text-[10px] text-slate-500">ملف جديد جاهز للرفع</p>
-                    </div>
+                <!-- العنوان -->
+                <div class="space-y-1.5">
+                    <label for="title" class="text-xs font-bold text-slate-600">عنوان الملخص</label>
+                    <input id="title" name="title" type="text" value="{{ old('title', $summary->title) }}" required
+                        placeholder="مثال: ملخص هياكل البيانات والخوارزميات الشاملة"
+                        class="w-full rounded-xl border border-slate-200 py-2.5 px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 placeholder:text-slate-400">
                 </div>
-                <button type="button" id="remove-file" class="text-slate-400 hover:text-red-500 transition">
-                    <i data-lucide="x" class="w-4 h-4"></i>
+
+                <livewire:department-subject-select :department_id="$summary->subject->department_id" :subject_id="$summary->subject_id" />
+
+                <!-- الوصف -->
+                <div class="space-y-1.5">
+                    <label for="description" class="text-xs font-bold text-slate-600">وصف مختصر</label>
+                    <textarea id="description" name="description" rows="4"
+                        placeholder="اكتب نبذة بسيطة عن محتوى الملخص وما يميزه..."
+                        class="w-full rounded-xl border border-slate-200 py-2.5 px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 placeholder:text-slate-400 resize-none">{{ old('description', $summary->description) }}</textarea>
+                </div>
+            </div>
+
+            <!-- إعدادات النشر والتعديل -->
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-sky-600"></i>
+                    حالة التحديث
+                </h2>
+                <div class="flex items-center gap-2 bg-sky-50 border border-sky-100 text-sky-700 text-[11px] font-medium rounded-xl p-3">
+                    <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>عند تعديل الملخص، قد يخضع لمراجعة سريعة من فريق الإشراف لضمان جودة المحتوى.</span>
+                </div>
+            </div>
+
+            <!-- أزرار الحفظ -->
+            <div class="flex items-center justify-end gap-3">
+                <a href="{{ route('summaries.show', $summary->id) }}"
+                    class="bg-white hover:bg-slate-50 text-slate-600 font-bold py-2.5 px-5 rounded-xl text-xs border border-slate-200 transition">
+                    إلغاء
+                </a>
+                <button type="submit" id="submit-btn"
+                    class="bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition flex items-center gap-2 shadow-sm">
+                    <i data-lucide="save" class="w-4 h-4"></i>
+                    <span id="submit-text">حفظ التعديلات</span>
                 </button>
             </div>
-        </div>
+        </form>
+    </main>
 
-        <!-- بيانات الملخص -->
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-5">
-            <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <i data-lucide="info" class="w-4 h-4 text-sky-600"></i>
-                تفاصيل الملخص
-            </h2>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ==================== منع الإرسال المزدوج ====================
+            const form = document.querySelector('form[action*="summaries"]');
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            let isSubmitting = false;
 
-            <!-- العنوان -->
-            <div class="space-y-1.5">
-                <label for="title" class="text-xs font-bold text-slate-600">عنوان الملخص</label>
-                <input id="title" name="title" type="text" value="{{ $summary->title }}" required 
-                            class="w-full rounded-xl border border-slate-200 py-2.5 px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 placeholder:text-slate-400">
-            </div>
+            form?.addEventListener('submit', function(e) {
+                if (isSubmitting) {
+                    e.preventDefault();
+                    return false;
+                }
+                isSubmitting = true;
+                submitBtn.disabled = true;
+                submitText.textContent = 'جاري الحفظ...';
+            });
+        });
 
-            
-            <livewire:department-subject-select :department_id="$summary->subject->department_id" :subject_id="$summary->subject_id"/>
+        // ==================== معاينة الملف الجديد ====================
+        document.getElementById('summary_file')?.addEventListener('change', function(e) {
+            const preview = document.getElementById('file-preview');
+            const fileNameEl = document.getElementById('file-name');
+            const fileSizeEl = document.getElementById('file-size');
 
-            <!-- الوصف -->
-            <div class="space-y-1.5">
-                <label for="description" class="text-xs font-bold text-slate-600">وصف مختصر</label>
-                <textarea id="description" name="description" rows="4" 
-                            class="w-full rounded-xl border border-slate-200 py-2.5 px-4 text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-400 placeholder:text-slate-400 resize-none">{{ $summary->description }}</textarea>
-            </div>
-        </div>
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
 
-        <!-- إعدادات النشر والتعديل -->
-        <div class="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
-            <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <i data-lucide="shield-check" class="w-4 h-4 text-sky-600"></i>
-                حالة التحديث
-            </h2>
-            <div class="flex items-center gap-2 bg-sky-50 border border-sky-100 text-sky-700 text-[11px] font-medium rounded-xl p-3">
-                <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0"></i>
-                <span>عند تعديل الملخص، قد يخضع لمراجعة سريعة من فريق الإشراف لضمان جودة المحتوى.</span>
-            </div>
-        </div>
+                fileNameEl.textContent = file.name;
 
-        <!-- أزرار الحفظ -->
-        <div class="flex items-center justify-end gap-3">
-            <a href="{{route('summaries.show', $summary->id)}}"
-                class="bg-white hover:bg-slate-50 text-slate-600 font-bold py-2.5 px-5 rounded-xl text-xs border border-slate-200 transition">
-                إلغاء
-            </a>
-            <button type="submit"
-                    class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 px-6 rounded-xl text-xs transition flex items-center gap-2 shadow-sm shadow-sky-600/20">
-                <i data-lucide="save" class="w-4 h-4"></i>
-                <span>حفظ التعديلات</span>
-            </button>
-        </div>
-    </form>
-</main>
+                const sizeInBytes = file.size;
+                let formattedSize = '';
 
-<script>
-    // تفعيل الأيقونات لو لسه مشتغلتش
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
-    }
+                if (sizeInBytes < 1024 * 1024) {
+                    formattedSize = (sizeInBytes / 1024).toFixed(1) + ' كيلوبايت';
+                } else {
+                    formattedSize = (sizeInBytes / (1024 * 1024)).toFixed(1) + ' ميجابايت';
+                }
 
-    // تفعيل معاينة وتغيير اسم الملف المرفوع الجديد
-    document.getElementById('summary_file')?.addEventListener('change', function (e) {
-        const preview = document.getElementById('file-preview');
-        if (e.target.files.length > 0) {
-            preview.classList.remove('hidden');
-            preview.classList.add('flex');
-            document.getElementById('file-name-display').textContent = e.target.files[0].name;
+                fileSizeEl.textContent = formattedSize;
+
+                preview.classList.remove('hidden');
+                preview.classList.add('flex');
+            }
+        });
+
+        // ==================== إزالة الملف المختار ====================
+        document.getElementById('remove-file-btn')?.addEventListener('click', function() {
+            const fileInput = document.getElementById('summary_file');
+            const preview = document.getElementById('file-preview');
+
+            fileInput.value = '';
+            preview.classList.remove('flex');
+            preview.classList.add('hidden');
+        });
+
+        // ==================== تفعيل الأيقونات ====================
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
         }
-    });
-
-    document.getElementById('remove-file')?.addEventListener('click', function () {
-        const fileInput = document.getElementById('summary_file');
-        const preview = document.getElementById('file-preview');
-        fileInput.value = '';
-        preview.classList.remove('flex');
-        preview.classList.add('hidden');
-    });
-</script>
+    </script>
 @endsection

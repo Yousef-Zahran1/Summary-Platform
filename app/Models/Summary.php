@@ -35,6 +35,7 @@ class Summary extends Model
     }
     protected $fillable = [
         'title',
+        'file_size', 
         'file_path',
         'user_id',
         'status',

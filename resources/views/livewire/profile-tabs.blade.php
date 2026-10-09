@@ -14,6 +14,7 @@
     <div id="summaries-grid" class="space-y-5">
 
         <div class="flex flex-wrap items-center gap-2">
+
             <button wire:click="changeTab('my-summaries')"
                 class="px-4 py-2 cursor-pointer rounded-full text-xs font-bold transition flex items-center gap-2
                     {{ $tab === 'my-summaries'
@@ -23,7 +24,9 @@
                 <span>{{ auth()->id() == $user->id ? 'ملخصاتي المرفوعة' : 'ملخصاته المرفوعة' }}
                     ({{ $userSummariesCount }})</span>
             </button>
+
             @if (auth()->id() == $user->id)
+
                 <button wire:click="changeTab('pending-summaries')"
                     class="px-4 py-2 cursor-pointer rounded-full text-xs font-bold transition flex items-center gap-2
                     {{ $tab === 'pending-summaries'
@@ -32,6 +35,21 @@
                     <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
                     <span> الملخصات قيد المراجعة ({{ $pendingSummariesCount }})</span>
                 </button>
+
+            @endif
+
+                <button wire:click="changeTab('likes')"
+                    class="px-4 py-2 cursor-pointer rounded-full text-xs font-bold transition flex items-center gap-2
+                        {{ $tab === 'likes'
+                            ? 'bg-sky-600 text-white shadow-sm'
+                            : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+                    <i data-lucide="heart" class="w-3.5 h-3.5"></i>
+                    <span>{{ auth()->id() == $user->id ? 'ملخصات اعجبتني' : 'ملخصات اعجب بها' }}
+                        ({{ $likesCount }})</span>
+                </button>
+
+            @if (auth()->id() == $user->id)
+            
                 <button wire:click="changeTab('saved-summaries')"
                     class="px-4 py-2 cursor-pointer rounded-full text-xs font-bold transition flex items-center gap-2
                     {{ $tab === 'saved-summaries'
@@ -39,6 +57,15 @@
                         : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
                     <i data-lucide="bookmark" class="w-3.5 h-3.5"></i>
                     <span>الملخصات المحفوظة ({{ $savedCount }})</span>
+                </button>
+
+                <button wire:click="changeTab('rejected-summaries')"
+                    class="px-4 py-2 cursor-pointer rounded-full text-xs font-bold transition flex items-center gap-2
+                    {{ $tab === 'rejected-summaries'
+                        ? 'bg-orange-600 text-white shadow-sm'
+                        : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
+                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                    <span>الملخصات المرفوضة ({{ $rejectedSummariesCount }})</span>
                 </button>
 
                 <button wire:click="changeTab('trashed-summaries')"
@@ -49,26 +76,9 @@
                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                     <span>الملخصات المحذوفة ({{ $trashedSummariesCount }})</span>
                 </button>
-                
-                <button wire:click="changeTab('rejected-summaries')"
-                    class="px-4 py-2 cursor-pointer rounded-full text-xs font-bold transition flex items-center gap-2
-                    {{ $tab === 'rejected-summaries'
-                        ? 'bg-orange-600 text-white shadow-sm'
-                        : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
-                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
-                    <span>الملخصات المرفوضة ({{ $rejectedSummariesCount }})</span>
-                </button>
+
             @endif
 
-            <button wire:click="changeTab('likes')"
-                class="px-4 py-2 cursor-pointer rounded-full text-xs font-bold transition flex items-center gap-2
-                    {{ $tab === 'likes'
-                        ? 'bg-sky-600 text-white shadow-sm'
-                        : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200' }}">
-                <i data-lucide="heart" class="w-3.5 h-3.5"></i>
-                <span>{{ auth()->id() == $user->id ? 'ملخصات اعجبتني' : 'ملخصات اعجب بها' }}
-                    ({{ $likesCount }})</span>
-            </button>
 
         </div>
 
@@ -166,7 +176,7 @@
             </div>
         @endif
 
-        <x-summaries-pagination :summaries="$summaries" />
+        <x-pagination-department :summaries="$summaries" :livewire="true"/>
 
 
 
@@ -174,10 +184,8 @@
 </div>
 <script>
     document.addEventListener('livewire:initialized', () => {
-        // أول ما الصفحة تفتح لأول مرة
         lucide.createIcons();
 
-        // كل ما Livewire يحدث جزء من الصفحة ويخلص (after update)
         Livewire.hook('morph.updated', ({
             el,
             component

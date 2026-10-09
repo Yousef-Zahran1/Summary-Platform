@@ -7,7 +7,7 @@
 ])
 @if ($variant == 'small')
     <div
-        class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition group">
+        class="bg-white rounded-2xl border min-w-50 max-w-70 flex-1 border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition group">
 
         <div>
             <a href="{{ route('summaries.show', $summary->id) }}"
@@ -27,26 +27,35 @@
 
             <div class="p-4">
                 <a href="{{ route('summaries.show', $summary->id) }}" class="border-slate-100 block overflow-hidden">
-                    <h3 class="font-bold text-slate-900 text-[12px] mb-3 line-clamp-1 hover:text-blue-600 transition">
+                    <h3 class="font-bold text-slate-900 text-[12px] mb-3 truncate max-w-[170px] inline-block align-middle line-clamp-1 hover:text-blue-600 transition">
                         {{ $summary['title'] }}</h3>
                 </a>
                 <div class="flex items-center justify-between text-[9px] text-slate-500">
-                    <div class="flex items-center gap-2">
-                        <span class="flex items-center gap-1.5 font-semibold text-slate-700">
+                    <div class="flex items-center gap-1">
+                        <span class="flex items-center gap-0.5 font-semibold text-slate-700">
                             <a href="{{ route('profile.show', $summary->user_id) }}"
-                                class="w-5 h-5 p-[1px] rounded-[50%] bg-slate-100 flex items-center justify-center border border-slate-200 overflow-hidden relative">
-                                <svg class="w-full h-full text-slate-400" viewBox="0 0 24 24" fill="currentColor"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
+                                    class="w-6 h-6 rounded-[50%] bg-slate-100 flex items-center justify-center border border-slate-200 overflow-hidden relative">
+                                    @if ($summary->user->avatar)
+                                        <img src="{{ asset('storage/' . $summary->user->avatar) }}"
+                                            alt="{{ $summary->user->name }}"
+                                            class="w-full h-full rounded-full object-cover">
+                                    @else
+                                        <svg class="w-full h-full text-slate-400" viewBox="0 0 24 24"
+                                            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                        </svg>
+                                    @endif
+                                </a>
+                            <a href="{{ route('profile.show', $summary->user_id) }}" 
+                                class="hover:underline duration-200 truncate max-w-[60px] inline-block align-middle" 
+                                title="{{ $summary->user->name ?? 'غير محدد' }}">
+                                {{ $summary->user->name ?? 'غير محدد' }}
                             </a>
-                            <a
-                                href="{{ route('profile.show', $summary->user_id) }}">{{ $summary->user->name ?? 'غير محدد' }}</a>
                         </span>
                         <span class="text-slate-300">|</span>
                         <span class="flex items-center gap-1 text-slate-600 font-medium">
-                            <svg class="w-3 h-3 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                            <svg class="w-2 h-2 text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -56,14 +65,14 @@
                             {{ $summary->downloads_count }} تنزيل
                         </span>
                     </div>
-                    <span>{{ $summary->created_at->diffForHumans() }}</span>
+                    <span class="text-[9px]">{{ $summary->created_at->diffForHumans() }}</span>
                 </div>
             </div>
         </div>
 
         <div class="px-3 pb-2 pt-2 flex items-center justify-between border-t border-slate-100 mt-auto text-slate-500">
             <div
-                class="flex items-center {{ $summary->user_id == auth()->id() ? '' : 'justify-around' }} gap-1 flex-1">
+                class="flex items-center justify-around gap-1 flex-1">
                 <livewire:like-button :summary="$summary" wire:key="summary-like-{{ $summary->id }}" />
                 <livewire:save-button :summary="$summary" wire:key="summary-save-{{ $summary->id }}" />
                 <button
@@ -80,7 +89,7 @@
                     <span class="text-[9px] font-bold mt-0.5">مشاركة</span>
                 </button>
             </div>
-            @if ($summary->user_id == auth()->id())
+            {{-- @if ($summary->user_id == auth()->id())
                 <div class="flex items-center gap-1 font-bold">
                     <form action="{{ route('summaries.destroy', $summary->id) }}" method="POST">
                         @csrf
@@ -111,7 +120,7 @@
                         <span class="text-[9px] font-bold mt-0.5">تعديل</span>
                     </a>
                 </div>
-            @endif
+            @endif --}}
         </div>
     </div>
 @else
@@ -120,11 +129,11 @@
             class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition group ">
 
             <div>
-                <a href="{{ route('summaries.show', $summary->id) }}"
+                <a href="{{ $isTrashed ? '#' : route('summaries.show', $summary->id) }}"
                     class="relative h-44 border-b w-full bg-slate-50 border-slate-100 block overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80"
                         alt="{{ $summary->title }}"
-                        class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        class="w-full h-full object-cover {{$isTrashed ? 'cursor-auto' : 'group-hover:scale-105 transition duration-300 cursor-pointer'}}">
                     <div
                         class="absolute top-3 right-3 bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1">
                         <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
@@ -138,7 +147,7 @@
                 <div class="p-4">
                     <a href="{{ route('summaries.show', $summary->id) }}"
                         class="border-slate-100 block overflow-hidden">
-                        <h3 class="font-bold text-slate-900 text-sm mb-3 line-clamp-1 hover:text-blue-600 transition">
+                        <h3 class="font-bold text-slate-900 text-sm mb-3 line-clamp-1 truncate max-w-[250px] inline-block align-middle hover:text-blue-600 transition">
                             {{ $summary['title'] }}</h3>
                     </a>
                     <div class="flex items-center justify-between text-[11px] text-slate-500">
@@ -158,8 +167,11 @@
                                         </svg>
                                     @endif
                                 </a>
-                                <a
-                                    href="{{ route('profile.show', $summary->user_id) }}">{{ $summary->user->name }}</a>
+                                <a href="{{ route('profile.show', $summary->user_id) }}" 
+                                    class="hover:underline duration-200 truncate max-w-[80px] inline-block align-middle" 
+                                    title="{{ $summary->user->name ?? 'غير محدد' }}">
+                                    {{ $summary->user->name ?? 'غير محدد' }}
+                                </a>
                             </span>
                             <span class="text-slate-300">|</span>
                             <span class="flex items-center gap-1 text-slate-600 font-medium">
@@ -218,35 +230,48 @@
                 @endif
                 @if ($summary->user_id == auth()->id())
                     <div class="flex items-center gap-1 font-bold">
-                        <form action="{{ route('summaries.destroy', $summary->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                onclick="return confirm('هل أنت متأكد من رغبتك في حذف هذا الملخص؟')"
-                                class="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 transition"
-                                title="حذف">
-                                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <polyline points="3 6 5 6 21 6"></polyline>
-                                    <path
-                                        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                                    </path>
-                                    <line x1="10" y1="11" x2="10" y2="17"></line>
-                                    <line x1="14" y1="11" x2="14" y2="17"></line>
-                                </svg>
-                                <span class="text-[9px] font-bold mt-0.5">حذف</span>
-                            </button>
-                        </form>
+                        <button type="button"
+                            @click="$dispatch('open-confirm', {
+                                action: '{{ route('summaries.destroy', $summary->id) }}',
+                                method: 'DELETE',
+                                title: 'حذف الملخص',
+                                message: 'هل أنت متأكد من حذف هذا الملخص؟',
+                                confirmText: 'نعم، احذف',
+                                cancelText: 'إلغاء'
+                            })"
+                            class="flex cursor-pointer flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-red-50 hover:text-red-500 transition"
+                            title="حذف"
+                        >
+                            <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+
+                            <span class="text-[9px] font-bold mt-0.5">
+                                حذف
+                            </span>
+                        </button>
                         @if($isTrashed)
-                            <a class="flex flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-green-100 hover:text-green-700 transition"
-                                title="استرجاع">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
-                                    <polyline points="1 4 1 10 7 10"></polyline>
-                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
-                                </svg>
-                                <span class="text-[9px] font-bold mt-0.5">استرجاع</span>
-                            </a>
+                            <button type="button"
+        x-data
+        @click="$dispatch('open-confirm', {
+            action: '{{ route('summaries.restore', $summary->id) }}',
+            method: 'POST',
+            title: 'استعادة الملخص',
+            message: 'هل تريد استعادة هذا الملخص؟ سيظهر مرة أخرى في قائمة ملخصاتك.',
+            confirmText: 'نعم، إسترجاع',
+            cancelText: 'إلغاء'
+        })"
+        class="flex cursor-pointer flex-col items-center justify-center px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 hover:text-emerald-600 transition"
+        title="استرجاع">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+        </svg>
+        <span class="text-[9px] font-bold mt-0.5">استرجاع</span>
+    </button>
                         @elseif($isRejected)
                             
                         @else

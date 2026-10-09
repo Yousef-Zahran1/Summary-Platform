@@ -178,13 +178,13 @@
                                 </span>
                             </td>
                             <td class="py-4 px-6 font-bold text-slate-900">
-                                <a href="{{ route('summaries.show', $summary) }}" class="text-slate-700 duration-300 hover:underline hover:text-slate-900">
+                                <a href="{{ route('summaries.show', $summary) }}" class="text-slate-700 truncate max-w-[150px] inline-block align-middle duration-300 hover:underline hover:text-slate-900">
                                     {{ $summary->title }}
                                 </a>
                             </td>
                             <td class="py-4 px-6">
                                 <span class="text-slate-800 font-semibold">
-                                    <a href="{{ route('profile.show', $summary->user->id) }}" class="text-slate-700 duration-300 hover:underline hover:text-slate-900">
+                                    <a href="{{ route('profile.show', $summary->user->id) }}" class="text-slate-700 truncate max-w-[110px] inline-block align-middle duration-300 duration-300 hover:underline hover:text-slate-900">
                                         {{ $summary->user->name }}
                                     </a>
                                 </span>
@@ -303,7 +303,5 @@
     </div>
 @endif
 
-
-    <!-- نظام التصفح (Pagination) -->
-    <x-pagination-department :summaries="$summaries"/>
+    <x-pagination-department :summaries="$summaries" :livewire="true"/>
 </div>

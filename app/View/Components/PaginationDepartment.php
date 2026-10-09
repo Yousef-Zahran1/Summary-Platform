@@ -8,14 +8,14 @@ use Illuminate\View\Component;
 
 class PaginationDepartment extends Component
 {
-    /**
-     * Create a new component instance.
-     */
-    public function __construct(
-        public $summaries
-    )
+    public $paginator;
+    public $summaries;
+    public $livewire;
+    public function __construct($paginator = null, $summaries = null, $livewire = false)
     {
-        //
+        $this->paginator = $paginator;
+        $this->summaries = $summaries;
+        $this->livewire = $livewire;
     }
 
     /**

@@ -30,10 +30,6 @@
                     <h3 class="text-sm font-black text-slate-800">سجل التنزيلات الأخيرة</h3>
                     <p class="text-xs text-slate-500 mt-0.5">تابع الملفات والمذكرات التي قم بتحميلها مع توقيت التنزيل.</p>
                 </div>
-                <button class="text-xs text-rose-600 hover:text-rose-700 font-bold flex items-center gap-1.5 self-start sm:self-auto bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-xl transition">
-                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                    <span>إفريغ السجل</span>
-                </button>
             </div>
 
             <div>
@@ -41,7 +37,7 @@
                     <thead>
                         <tr class="bg-slate-50/70 border-b border-slate-100 text-[11px] font-bold text-slate-500">
                             <th class="py-3 px-6">المادة / اسم الملخص</th>
-                            <th class="py-3 px-6">القسم الدراسي</th>
+                            <th class="py-3 px-6">المادة الدراسية</th>
                             <th class="py-3 px-6">توقيت التنزيل</th>
                             <th class="py-3 px-6">الحجم</th>
                             <th class="py-3 px-6 text-center">الإجراءات</th>
@@ -56,31 +52,33 @@
                                             <i data-lucide="file-text" class="w-4 h-4"></i>
                                         </div>
                                         <div>
-                                            <a href="#" class="font-bold text-slate-900 hover:text-blue-600 transition block">{{$summary->title}}</a>
+                                            <a href="{{route('summaries.show' , $summary->id)}}" class="font-bold text-slate-900 hover:text-blue-600 transition block">{{$summary->title}}</a>
                                             <span class="text-[10px] text-slate-400">بواسطة: {{$summary->user->name}}</span>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="py-3.5 px-6">
                                     <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 text-[11px] font-semibold">
-                                        {{$summary->subject->department->name}}
+                                        {{$summary->subject->name}}
                                     </span>
                                 </td>
                                 <td class="py-3.5 px-6 text-slate-500 text-[11px]">
-                                    <!-- تم تصحيح تركيب الـ Span داخل الأيقونة هنا لتجنب مشاكل التصميم -->
                                     <div class="flex items-center gap-1">
                                         <i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i>
                                         <span>{{$summary->pivot->created_at->diffForHumans()}}</span>
                                     </div>
                                 </td>
                                 <td class="py-3.5 px-6 text-slate-500 text-[11px]">
-                                    4.2 ميجابايت
+                                    @if ($summary->file_size)
+                                        <span class="flex items-center gap-1">
+                                            {{ format_bytes($summary->file_size) }}
+                                        </span>
+                                    @else
+                                        <span class="text-slate-300">—</span>
+                                    @endif
                                 </td>
                                 <td class="py-3.5 px-6 text-center">
                                     <div class="flex items-center justify-center gap-1.5">
-                                        <a href="#" title="تحميل مرة أخرى" class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition flex items-center justify-center">
-                                            <i data-lucide="download" class="w-3.5 h-3.5"></i>
-                                        </a>
                                         <a href="{{route('summaries.show' , $summary->id )}}" title="عرض الملخص" class="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition flex items-center justify-center">
                                             <i data-lucide="eye" class="w-3.5 h-3.5"></i>
                                         </a>
@@ -92,7 +90,7 @@
                 </table>
             </div>
         </div>
-            <x-summaries-pagination :summaries="$summaries"/>
 
+        <x-pagination-department :summaries="$summaries"/>
     </main>
 @endsection('content')

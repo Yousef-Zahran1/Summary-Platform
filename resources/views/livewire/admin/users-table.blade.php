@@ -249,16 +249,16 @@
                                         @endif
                                     </div>
                                     @if ($user->role === 'admin')
-                                        <div class="text-slate-700 font-medium">{{ $user->name }}</div>
+                                        <div class="text-slate-700 font-medium truncate max-w-[150px] inline-block align-middle duration-300">{{ $user->name }}</div>
                                     @else
                                         <a href="{{ route('profile.show', $user->id) }}"
-                                            class="text-slate-700 duration-300 hover:underline hover:text-slate-900 font-medium">
+                                            class="text-slate-700 duration-300 truncate max-w-[150px] inline-block align-middle duration-300 hover:underline hover:text-slate-900 font-medium">
                                             {{ $user->name }}
                                         </a>
                                     @endif
                                 </div>
                             </td>
-                            <td class="py-4 px-4 text-slate-600">{{ $user->email ?? '—' }}</td>
+                            <td class="py-4 px-4 text-slate-600 truncate max-w-[180px] inline-block align-middle duration-300">{{ $user->email ?? '—' }}</td>
                             <td class="py-4 px-4 text-slate-500">
                                 @if ($user->role === 'admin')
                                     —

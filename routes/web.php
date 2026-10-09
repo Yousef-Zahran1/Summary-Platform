@@ -51,6 +51,7 @@ Route::middleware(['auth', 'not-admin'])->group(function () {
 
 
 Route::middleware('auth')->group(function () {
+    Route::get('/summaries/{summary}/download', [SummaryController::class, 'download'])->name('summaries.download');
     route::get('/settings', [ProfileController::class, 'edit'])->name('settings');
     route::patch('/settings/profile', [ProfileController::class, 'update'])->name('settings.profile.update');
 
@@ -59,6 +60,7 @@ Route::middleware('auth')->group(function () {
 
     route::get('/summaries/{summary}', [SummaryController::class, 'show'])->name('summaries.show');
     route::delete('/summaries/{summary}', [SummaryController::class, 'destroy'])->name('summaries.destroy');
+    Route::post('/summaries/{id}/restore', [SummaryController::class, 'restore'])->name('summaries.restore');
 
     route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 });

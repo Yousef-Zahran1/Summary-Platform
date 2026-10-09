@@ -45,7 +45,7 @@
     @endif
 
     
-    <x-summaries-pagination :summaries="$summaries"/>
+    <x-pagination-department :summaries="$summaries" :livewire="true"/>
 
 </div>
 
